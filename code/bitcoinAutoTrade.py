@@ -4,8 +4,8 @@ import datetime
 
 import bestk
 
-access = "V3kfwvQHgY4K5sTOQpZ0C343SCecF1uBtdpqQC2g"
-secret = "4BcaUXpVHGqqAcY1SIVLIBBxh8PGPbsBHyPxWIx5"
+access = "r3vDlx2fLwquOSGPM8AwA8eulChTYuSBGKarLP9o"
+secret = "lrFcol9WkkE0OBbhFIpxz3skF0sF83mESVxFKYUy"
 
 def get_target_price(ticker, k):
     df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
