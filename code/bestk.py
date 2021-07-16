@@ -1,9 +1,9 @@
 import pyupbit
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
-def get_ror(k=0.5):
+def get_ror(k = 0.5):
     df = pyupbit.get_ohlcv("KRW-XRP")
     df['range'] = (df['high'] - df['low']) * k
     df['target'] = df['open'] + df['range'].shift(1)
@@ -16,14 +16,18 @@ def get_ror(k=0.5):
     ror = df['ror'].cumprod()[-2]
     return ror
 
-k_value = []
-ror = []
+def get_k():
+    k_value = []
+    ror = []
 
-for k in np.arange(0.0, 1.0, 0.05):
-    k_value.append(k)
-    ror.append(get_ror(k))
+    for k in np.arange(0.0, 1.0, 0.1):
+        k_value.append(k)
+        ror.append(get_ror(k))
 
-plt.plot(k_value, ror)
-plt.xlabel("K value")
-plt.ylabel("Rate of Return")
-plt.show()
+    return k_value[ror.index(max(ror))]
+
+# Plotting
+# plt.plot(k_value, ror)
+# plt.xlabel("K value")
+# plt.ylabel("Rate of Return")
+# plt.show()
