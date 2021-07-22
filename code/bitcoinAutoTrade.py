@@ -58,7 +58,7 @@ while True:
         elif end_time - datetime.timedelta(seconds=30) < now < end_time - datetime.timedelta(seconds=20):
             coin = get_balance(coin_name)
 
-            if (coin * get_current_price(coin_name)) > 5000:
+            if (coin * get_current_price("KRW-"+coin_name)) > 5000:
                 upbit.sell_market_order("KRW-"+coin_name, coin*0.9995)
 
         else:
