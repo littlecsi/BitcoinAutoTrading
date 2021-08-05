@@ -31,20 +31,3 @@ secret = "FxQNWmUGpALOjTUZt8igkGOcxsQNs86yimUbnRka"
 # secret = "lrFcol9WkkE0OBbhFIpxz3skF0sF83mESVxFKYUy"
 
 upbit = pyupbit.Upbit(access, secret)
-
-# print(upbit.get_balance("KRW-XRP"))
-# print(upbit.get_balance("KRW"))
-
-# print(get_balance("XRP") * get_current_price("KRW-XRP"))
-
-now = datetime.datetime.now() + datetime.timedelta(hours=9)
-start_time = get_start_time("KRW-XRP")
-end_time = start_time + datetime.timedelta(days=1)
-
-start_time + datetime.timedelta(days=1)
-
-print(start_time)
-
-# if start_time < now < end_time - datetime.timedelta(seconds=10):
-#     print("close time")
-#     print(now)
