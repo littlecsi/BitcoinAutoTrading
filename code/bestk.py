@@ -3,8 +3,8 @@ import numpy as np
 # import matplotlib.pyplot as plt
 
 
-def get_ror(k = 0.5):
-    df = pyupbit.get_ohlcv("KRW-XRP")
+def get_ror(coin_name, k = 0.5):
+    df = pyupbit.get_ohlcv(coin_name)
     df['range'] = (df['high'] - df['low']) * k
     df['target'] = df['open'] + df['range'].shift(1)
 
@@ -14,15 +14,16 @@ def get_ror(k = 0.5):
                          1)
 
     ror = df['ror'].cumprod()[-2]
+
     return ror
 
-def get_k():
+def get_k(coin_name):
     k_value = []
     ror = []
 
-    for k in np.arange(0.0, 1.0, 0.1):
+    for k in np.arange(0.0, 1.0, 0.2):
         k_value.append(k)
-        ror.append(get_ror(k))
+        ror.append(get_ror(coin_name, k))
 
     return k_value[ror.index(max(ror))]
 
@@ -30,4 +31,4 @@ def get_k():
 # plt.plot(k_value, ror)
 # plt.xlabel("K value")
 # plt.ylabel("Rate of Return")
-# plt.show()
+# plt.savefig('plot.png', dpi=300, bbox_inches='tight')
