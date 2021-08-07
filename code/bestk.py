@@ -21,7 +21,7 @@ def get_k(coin_name):
     k_value = []
     ror = []
 
-    for k in np.arange(0.0, 1.0, 0.2):
+    for k in np.arange(0.1, 1.0, 0.2):
         k_value.append(k)
         ror.append(get_ror(coin_name, k))
 
