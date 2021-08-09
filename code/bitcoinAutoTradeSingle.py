@@ -4,11 +4,11 @@ import datetime
 
 import bestk
 
-# access = "r3vDlx2fLwquOSGPM8AwA8eulChTYuSBGKarLP9o"
-# secret = "lrFcol9WkkE0OBbhFIpxz3skF0sF83mESVxFKYUy"
+access = "r3vDlx2fLwquOSGPM8AwA8eulChTYuSBGKarLP9o"
+secret = "lrFcol9WkkE0OBbhFIpxz3skF0sF83mESVxFKYUy"
 
-access = "vTONc1AEzuBo8u3ixsDLMCp9n3q9umc9K0xStqtk"
-secret = "FxQNWmUGpALOjTUZt8igkGOcxsQNs86yimUbnRka"
+# access = "vTONc1AEzuBo8u3ixsDLMCp9n3q9umc9K0xStqtk"
+# secret = "FxQNWmUGpALOjTUZt8igkGOcxsQNs86yimUbnRka"
 
 def get_target_price(ticker, k):
     df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
@@ -59,7 +59,7 @@ while True:
 
         print(now)
 
-        if start_time < now < end_time - datetime.timedelta(seconds=10):
+        if start_time < now < end_time - datetime.timedelta(minutes=1):
             target_price = get_target_price(krw_coin, k)
             escape_price = get_escape_price(krw_coin, k)
 
@@ -73,6 +73,12 @@ while True:
                     upbit.buy_market_order(krw_coin, krw*0.9995)
                     buy_price = current_price
                     print("purchased")
+
+                    upbit.sell_limit_order(krw_coin, current_price*1.1, get_balance(krw_coin[4:]))
+                    print("sell limit order made")
+
+                else:
+                    print("Not enough balance")
 
             # If price drops suddenly 
             elif escape_price > current_price:
