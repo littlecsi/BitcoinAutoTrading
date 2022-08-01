@@ -51,13 +51,46 @@ def get_ytd_ohlcv(client, asset="BTCUSDT"):
     Returns open, high, low, close, volume data from yesterday.
     """
     assert(isinstance(client, Spot))
+    assert(isinstance(asset, str))
 
     # Add "USDT" if user just inputs coin symbol
     if len(asset) <= 4: asset += "USDT"
 
     # Receives today's timestamp and convert to "ms"
-    today = int(get_today())*1000
+    today = int(get_today()) * 1000
 
     result = client.klines(asset, "1d", endTime=today)
 
-    return result[1:6]
+    return result[-1][1:6]
+
+def get_tdy_ohlcv(client, asset="BTCUSDT"):
+    """
+    Returns today's open, high, low, close, volume data.
+    """
+    assert(isinstance(client, Spot))
+    assert(isinstance(asset, str))
+
+    if len(asset) <= 4: asset += "USDT"
+
+    today = int(get_today()) * 1000
+
+    result = client.klines(asset, "1d", startTime=today)
+
+    print(datetime.datetime.fromtimestamp(result[0][6]/1000))
+
+    return result[0][1:6]
+
+def get_target_price(client, asset="BTCUSDT"):
+    """
+    Returns target price of today.
+    """
+    assert(isinstance(client, Spot))
+    assert(isinstance(asset, str))
+    
+    today = get_tdy_ohlcv(client, asset)
+    yesterday = get_ytd_ohlcv(client, asset)
+
+    # Volatility Breakout Target calculation
+    target = today[0] + (yesterday[1] - yesterday[2]) * 0.5
+
+    return target
