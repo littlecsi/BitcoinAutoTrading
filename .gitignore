@@ -3,3 +3,5 @@
 *.xlsx
 .DS_Store
 *.png
+config.py
+*.pyc
