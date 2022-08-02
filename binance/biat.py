@@ -17,7 +17,7 @@ def get_balance(client: Spot, asset: str="BTCUSDT") -> int:
 
     for i in range(len(balances)):
         if balances[i]["asset"] == asset:
-            return balances[i]["free"]
+            return float(balances[i]["free"])
 
 def get_current_price(client: Spot, asset: str="BTCUSDT") -> int:
     """"
@@ -30,7 +30,7 @@ def get_current_price(client: Spot, asset: str="BTCUSDT") -> int:
     # Add "USDT" if user just inputs coin symbol
     if len(asset) <= 4: asset += "USDT"
 
-    return client.ticker_price(asset)["price"]
+    return float(client.ticker_price(asset)["price"])
 
 def get_today() -> datetime.datetime:
     """
@@ -87,4 +87,20 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
     # Volatility Breakout Target calculation
     target = float(today[0]) + (float(yesterday[1]) - float(yesterday[2])) * 0.5
 
-    return target
+    return float(target)
+
+def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT"):
+    """
+    Attemps to purchase crypto at target price.
+    """
+    assert(isinstance(client, Spot))
+    assert(isinstance(balance, float))
+    assert(isinstance(price, float))
+    assert(isinstance(asset, str))
+
+    # Calculate the quantity of crypto to buy
+    quantity = balance // price
+
+    response = client.new_order_test(asset, "BUY", "MARKET", quantity=quantity)
+
+    return response
