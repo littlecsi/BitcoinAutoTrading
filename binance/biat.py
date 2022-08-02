@@ -6,12 +6,12 @@ from binance.spot import Spot
 
 import datetime
 
-def get_balance(client: Spot, asset: str="BTCUSDT") -> int:
+def get_balance(client: Spot, asset: str="BTCUSDT") -> float:
     """
     Returns the account balance for a specific asset type.
     """
-    assert(isinstance(client, Spot))
-    assert(isinstance(asset, str))
+    assert isinstance(client, Spot)
+    assert isinstance(asset, str)
 
     balances = client.account()["balances"]
 
@@ -19,13 +19,13 @@ def get_balance(client: Spot, asset: str="BTCUSDT") -> int:
         if balances[i]["asset"] == asset:
             return float(balances[i]["free"])
 
-def get_current_price(client: Spot, asset: str="BTCUSDT") -> int:
+def get_current_price(client: Spot, asset: str="BTCUSDT") -> float:
     """"
     Returns the current price of a specific asset.
     Asset type is "BTC" by default.
     """
-    assert(isinstance(client, Spot))
-    assert(isinstance(asset, str))
+    assert isinstance(client, Spot)
+    assert isinstance(asset, str)
 
     # Add "USDT" if user just inputs coin symbol
     if len(asset) <= 4: asset += "USDT"
@@ -46,8 +46,8 @@ def get_ytd_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
     """
     Returns open, high, low, close, volume data from yesterday.
     """
-    assert(isinstance(client, Spot))
-    assert(isinstance(asset, str))
+    assert isinstance(client, Spot)
+    assert isinstance(asset, str)
 
     # Add "USDT" if user just inputs coin symbol
     if len(asset) <= 4: asset += "USDT"
@@ -63,8 +63,8 @@ def get_tdy_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
     """
     Returns today's open, high, low, close, volume data.
     """
-    assert(isinstance(client, Spot))
-    assert(isinstance(asset, str))
+    assert isinstance(client, Spot)
+    assert isinstance(asset, str)
 
     if len(asset) <= 4: asset += "USDT"
 
@@ -78,8 +78,8 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
     """
     Returns target price of today.
     """
-    assert(isinstance(client, Spot))
-    assert(isinstance(asset, str))
+    assert isinstance(client, Spot)
+    assert isinstance(asset, str)
     
     today = get_tdy_ohlcv(client, asset)
     yesterday = get_ytd_ohlcv(client, asset)
@@ -89,18 +89,36 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
 
     return float(target)
 
-def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT"):
+def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT") -> dict:
     """
     Attemps to purchase crypto at target price.
     """
-    assert(isinstance(client, Spot))
-    assert(isinstance(balance, float))
-    assert(isinstance(price, float))
-    assert(isinstance(asset, str))
+    assert isinstance(client, Spot)
+    assert isinstance(balance, float)
+    assert isinstance(price, float)
+    assert isinstance(asset, str)
 
     # Calculate the quantity of crypto to buy
     quantity = balance // price
 
-    response = client.new_order_test(asset, "BUY", "MARKET", quantity=quantity)
+    try:
+        response = client.new_order(asset, "BUY", "MARKET", quantity=quantity)
+        return response
+    except:
+        response = {}
+        raise Exception("Order not successful.\nPlease try again.")
 
-    return response
+def sell_crypto(client: Spot, quantity: float, asset: str="BTCUSDT") -> dict:
+    """
+    Attempts to sell crypto at market price.
+    """
+    assert isinstance(client, Spot)
+    assert isinstance(quantity, float)
+    assert isinstance(asset, str)
+
+    try:
+        response = client.new_order(asset, "SELL", "MARKET", quantity=quantity)
+        return response
+    except:
+        response = {}
+        raise Exception("Order not successful.\nPlease try again.")
