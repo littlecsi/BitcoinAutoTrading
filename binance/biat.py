@@ -6,7 +6,7 @@ from binance.spot import Spot
 
 import datetime
 
-def get_balance(client, asset="USDT"):
+def get_balance(client: Spot, asset: str="BTCUSDT") -> int:
     """
     Returns the account balance for a specific asset type.
     """
@@ -19,7 +19,7 @@ def get_balance(client, asset="USDT"):
         if balances[i]["asset"] == asset:
             return balances[i]["free"]
 
-def get_current_price(client, asset="BTCUSDT"):
+def get_current_price(client: Spot, asset: str="BTCUSDT") -> int:
     """"
     Returns the current price of a specific asset.
     Asset type is "BTC" by default.
@@ -32,21 +32,17 @@ def get_current_price(client, asset="BTCUSDT"):
 
     return client.ticker_price(asset)["price"]
 
-def get_today():
+def get_today() -> datetime.datetime:
     """
     Returns today's timestamp
     """
     today = datetime.datetime.utcnow().date()
 
-    today = datetime.datetime(
-        today.year,
-        today.month,
-        today.day
-    )
+    today = datetime.datetime(today.year, today.month, today.day)
 
     return datetime.datetime.timestamp(today)
 
-def get_ytd_ohlcv(client, asset="BTCUSDT"):
+def get_ytd_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
     """
     Returns open, high, low, close, volume data from yesterday.
     """
@@ -63,7 +59,7 @@ def get_ytd_ohlcv(client, asset="BTCUSDT"):
 
     return result[-1][1:6]
 
-def get_tdy_ohlcv(client, asset="BTCUSDT"):
+def get_tdy_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
     """
     Returns today's open, high, low, close, volume data.
     """
@@ -76,11 +72,9 @@ def get_tdy_ohlcv(client, asset="BTCUSDT"):
 
     result = client.klines(asset, "1d", startTime=today)
 
-    print(datetime.datetime.fromtimestamp(result[0][6]/1000))
-
     return result[0][1:6]
 
-def get_target_price(client, asset="BTCUSDT"):
+def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
     """
     Returns target price of today.
     """
@@ -91,6 +85,6 @@ def get_target_price(client, asset="BTCUSDT"):
     yesterday = get_ytd_ohlcv(client, asset)
 
     # Volatility Breakout Target calculation
-    target = today[0] + (yesterday[1] - yesterday[2]) * 0.5
+    target = float(today[0]) + (float(yesterday[1]) - float(yesterday[2])) * 0.5
 
     return target
