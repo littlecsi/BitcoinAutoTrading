@@ -1,2 +1,2 @@
 # AutoTrading
-Bitocin Automated Trading [Upbit]
+Bitocin Automated Trading
