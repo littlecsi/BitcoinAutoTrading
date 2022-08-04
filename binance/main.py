@@ -43,7 +43,7 @@ def main():
             # Purchase the maximum amount of crypto user can order.
             biat.buy_crypto(client, balance, target_price, asset)
 
-        time.sleep(10)
+        time.sleep(1)
 
 if __name__ == "__main__":
     main()
