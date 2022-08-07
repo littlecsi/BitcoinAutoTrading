@@ -91,6 +91,17 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
 
     return float(target)
 
+def get_precision(client: Spot, asset: str="BTCUSDT") -> int:
+    """
+    Returns the asset precision of an asset.
+    """
+    assert isinstance(client, Spot)
+    assert isinstance(asset, str)
+
+    if len(asset) <= 4: asset += "USDT"
+
+    return int(client.exchange_info(asset)["symbols"][0]["baseAssetPrecision"])
+
 def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT") -> dict:
     """
     Attemps to purchase crypto at target price.
@@ -101,7 +112,7 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT")
     assert isinstance(asset, str)
 
     # Calculate the quantity of crypto to buy
-    quantity = balance / price
+    quantity = round((balance / price), get_precision(client, asset))
 
     try:
         response = client.new_order(asset, "BUY", "MARKET", quantity=quantity)
