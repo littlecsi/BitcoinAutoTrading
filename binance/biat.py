@@ -87,6 +87,8 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
     # Volatility Breakout Target calculation
     target = float(today[0]) + (float(yesterday[1]) - float(yesterday[2])) * 0.5
 
+    print("NEW TARGET", asset, target)
+
     return float(target)
 
 def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT") -> dict:
@@ -103,6 +105,7 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT")
 
     try:
         response = client.new_order(asset, "BUY", "MARKET", quantity=quantity)
+        print("BUY", asset, quantity, "unit(s)")
         return response
     except:
         response = {}
@@ -118,6 +121,7 @@ def sell_crypto(client: Spot, quantity: float, asset: str="BTCUSDT") -> dict:
 
     try:
         response = client.new_order(asset, "SELL", "MARKET", quantity=quantity)
+        print("SELL", asset, quantity, "unit(s)")
         return response
     except:
         response = {}
