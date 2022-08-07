@@ -101,7 +101,7 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT")
     assert isinstance(asset, str)
 
     # Calculate the quantity of crypto to buy
-    quantity = balance // price
+    quantity = balance / price
 
     try:
         response = client.new_order(asset, "BUY", "MARKET", quantity=quantity)
