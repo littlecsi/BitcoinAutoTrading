@@ -14,6 +14,8 @@ target_price = 0.0
 client = Spot(key=config.api_key, secret=config.api_secret)
 
 def main():
+    print("Binance Auto Trading Start...")
+
     now = datetime.datetime.utcnow()
     mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(1)
 
