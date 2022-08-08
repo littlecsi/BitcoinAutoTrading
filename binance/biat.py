@@ -89,7 +89,7 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
 
     print("NEW TARGET", asset, target)
 
-    return float(round(target), 4)
+    return float(round(target, 4))
 
 # def get_precision(client: Spot, asset: str="BTCUSDT") -> int:
 #     """
