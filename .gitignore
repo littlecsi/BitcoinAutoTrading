@@ -6,3 +6,4 @@
 config.py
 *.pyc
 *.pem
+binance/test.py
