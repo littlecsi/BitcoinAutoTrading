@@ -59,20 +59,20 @@ def get_ytd_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
 
     return result[-1][1:6]
 
-def get_tdy_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
-    """
-    Returns today's open, high, low, close, volume data.
-    """
-    assert isinstance(client, Spot)
-    assert isinstance(asset, str)
+# def get_tdy_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
+#     """
+#     Returns today's open, high, low, close, volume data.
+#     """
+#     assert isinstance(client, Spot)
+#     assert isinstance(asset, str)
 
-    if len(asset) <= 4: asset += "USDT"
+#     if len(asset) <= 4: asset += "USDT"
 
-    today = int(get_today()) * 1000
+#     today = int(get_today()) * 1000
 
-    result = client.klines(asset, "1d", startTime=today)
+#     result = client.klines(asset, "1d", startTime=today)
 
-    return result[0][1:6]
+#     return result[0][1:6]
 
 def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
     """
@@ -81,11 +81,11 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
     assert isinstance(client, Spot)
     assert isinstance(asset, str)
     
-    today = get_tdy_ohlcv(client, asset)
+    # today = get_tdy_ohlcv(client, asset)
     yesterday = get_ytd_ohlcv(client, asset)
 
     # Volatility Breakout Target calculation
-    target = float(today[0]) + (float(yesterday[1]) - float(yesterday[2])) * 0.5
+    target = float(yesterday[3]) + (float(yesterday[1]) - float(yesterday[2])) * 0.5
 
     print("NEW TARGET", asset, target)
 
