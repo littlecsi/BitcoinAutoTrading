@@ -17,7 +17,11 @@ def get_balance(client: Spot, asset: str="BTCUSDT") -> float:
 
     for i in range(len(balances)):
         if balances[i]["asset"] == asset:
-            return float(balances[i]["free"])
+            free = balances[i]["free"]
+            if free == None:
+                return 0.0
+            else:
+                return float(free)
 
 def get_current_price(client: Spot, asset: str="BTCUSDT") -> float:
     """"
