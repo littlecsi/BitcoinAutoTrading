@@ -5,6 +5,7 @@ Contains all the functions for the BinanceAutoTrading project.
 from binance.spot import Spot
 
 import datetime
+import requests
 
 def get_balance(client: Spot, asset: str="BTCUSDT") -> float:
     """
@@ -141,3 +142,10 @@ def sell_crypto(client: Spot, quantity: float, asset: str="BTCUSDT") -> dict:
     except:
         response = {}
         raise Exception("Order not successful.\nPlease try again.")
+
+def post_message(token, channel, text):
+    response = requests.post("https://slack.com/api/chat.postMessage",
+        headers={"Authorization": "Bearer " + token},
+        data={"channel": channel,"text": text}
+    )
+    print(response)
