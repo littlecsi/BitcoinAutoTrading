@@ -1,6 +1,7 @@
 """"
 Contains all the functions for the BinanceAutoTrading project.
 """
+import config
 
 from binance.spot import Spot
 
@@ -92,7 +93,9 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
     # Volatility Breakout Target calculation
     target = float(yesterday[3]) + (float(yesterday[1]) - float(yesterday[2])) * 0.5
 
-    print("NEW TARGET", asset, target)
+    msg = "TARGET " + asset + " " + target
+
+    post_message(config.slack_token, "#target", msg)
 
     return float(round(target, 4))
 
@@ -118,14 +121,16 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT")
 
     # Calculate the quantity of crypto to buy
     quantity = round((balance / price), 3)
+    msg = "BUY " + asset + " " + quantity + " unit(s)"
 
     try:
         response = client.new_order(asset, "BUY", "MARKET", quantity=quantity)
-        print("BUY", asset, quantity, "unit(s)")
-        return response
     except:
         response = {}
         raise Exception("Order not successful.\nPlease try again.")
+    
+    post_message(config.slack_token, "#trade-alert", msg)
+    return response
 
 def sell_crypto(client: Spot, quantity: float, asset: str="BTCUSDT") -> dict:
     """
@@ -135,13 +140,16 @@ def sell_crypto(client: Spot, quantity: float, asset: str="BTCUSDT") -> dict:
     assert isinstance(quantity, float)
     assert isinstance(asset, str)
 
+    msg = "SELL " + asset + " " + quantity + " unit(s)"
+
     try:
         response = client.new_order(asset, "SELL", "MARKET", quantity=quantity)
-        print("SELL", asset, quantity, "unit(s)")
-        return response
     except:
         response = {}
         raise Exception("Order not successful.\nPlease try again.")
+
+    post_message(config.slack_token, "#trade-alert", msg)
+    return response
 
 def post_message(token, channel, text):
     response = requests.post("https://slack.com/api/chat.postMessage",
