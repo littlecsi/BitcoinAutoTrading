@@ -93,7 +93,7 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
     # Volatility Breakout Target calculation
     target = float(yesterday[3]) + (float(yesterday[1]) - float(yesterday[2])) * 0.5
 
-    msg = "TARGET " + asset + " " + target
+    msg = "TARGET " + asset + " " + str(target)
 
     post_message(config.slack_token, "#target", msg)
 
@@ -121,7 +121,7 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT")
 
     # Calculate the quantity of crypto to buy
     quantity = round((balance / price), 3)
-    msg = "BUY " + asset + " " + quantity + " unit(s)"
+    msg = "BUY " + asset + " " + str(quantity) + " unit(s)"
 
     try:
         response = client.new_order(asset, "BUY", "MARKET", quantity=quantity)
@@ -140,7 +140,7 @@ def sell_crypto(client: Spot, quantity: float, asset: str="BTCUSDT") -> dict:
     assert isinstance(quantity, float)
     assert isinstance(asset, str)
 
-    msg = "SELL " + asset + " " + quantity + " unit(s)"
+    msg = "SELL " + asset + " " + str(quantity) + " unit(s)"
 
     try:
         response = client.new_order(asset, "SELL", "MARKET", quantity=quantity)
