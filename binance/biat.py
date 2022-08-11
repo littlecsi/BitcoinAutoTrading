@@ -34,7 +34,7 @@ def get_current_price(client: Spot, asset: str="BTCUSDT") -> float:
     assert isinstance(asset, str)
 
     # Add "USDT" if user just inputs coin symbol
-    if len(asset) <= 4: asset += "USDT"
+    if len(asset) <= 5: asset += "USDT"
 
     return float(client.ticker_price(asset)["price"])
 
@@ -56,7 +56,7 @@ def get_ytd_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
     assert isinstance(asset, str)
 
     # Add "USDT" if user just inputs coin symbol
-    if len(asset) <= 4: asset += "USDT"
+    if len(asset) <= 5: asset += "USDT"
 
     # Receives today's timestamp and convert to "ms"
     today = int(get_today()) * 1000
@@ -72,7 +72,7 @@ def get_ytd_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
 #     assert isinstance(client, Spot)
 #     assert isinstance(asset, str)
 
-#     if len(asset) <= 4: asset += "USDT"
+#     if len(asset) <= 5: asset += "USDT"
 
 #     today = int(get_today()) * 1000
 
@@ -106,7 +106,7 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
 #     assert isinstance(client, Spot)
 #     assert isinstance(asset, str)
 
-#     if len(asset) <= 4: asset += "USDT"
+#     if len(asset) <= 5: asset += "USDT"
 
 #     return int(client.exchange_info(asset)["symbols"][0]["baseAssetPrecision"])
 
