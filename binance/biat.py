@@ -8,12 +8,15 @@ from binance.spot import Spot
 import datetime
 import requests
 
-def get_balance(client: Spot, asset: str="BTCUSDT") -> float:
+def get_balance(client: Spot, asset: str="ETHUSDT") -> float:
     """
     Returns the account balance for a specific asset type.
     """
     assert isinstance(client, Spot)
     assert isinstance(asset, str)
+
+    # Add "USDT" if user just inputs coin symbol
+    if len(asset) <= 5: asset += "USDT"
 
     balances = client.account()["balances"]
 
@@ -25,7 +28,7 @@ def get_balance(client: Spot, asset: str="BTCUSDT") -> float:
             else:
                 return float(free)
 
-def get_current_price(client: Spot, asset: str="BTCUSDT") -> float:
+def get_current_price(client: Spot, asset: str="ETHUSDT") -> float:
     """"
     Returns the current price of a specific asset.
     Asset type is "BTC" by default.
@@ -48,7 +51,7 @@ def get_today() -> datetime.datetime:
 
     return datetime.datetime.timestamp(today)
 
-def get_ytd_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
+def get_ytd_ohlcv(client: Spot, asset: str="ETHUSDT") -> list:
     """
     Returns open, high, low, close, volume data from yesterday.
     """
@@ -65,27 +68,15 @@ def get_ytd_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
 
     return result[-1][1:6]
 
-# def get_tdy_ohlcv(client: Spot, asset: str="BTCUSDT") -> list:
-#     """
-#     Returns today's open, high, low, close, volume data.
-#     """
-#     assert isinstance(client, Spot)
-#     assert isinstance(asset, str)
-
-#     if len(asset) <= 5: asset += "USDT"
-
-#     today = int(get_today()) * 1000
-
-#     result = client.klines(asset, "1d", startTime=today)
-
-#     return result[0][1:6]
-
-def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
+def get_target_price(client: Spot, asset: str="ETHUSDT") -> float:
     """
     Returns target price of today.
     """
     assert isinstance(client, Spot)
     assert isinstance(asset, str)
+
+    # Add "USDT" if user just inputs coin symbol
+    if len(asset) <= 5: asset += "USDT"
     
     # today = get_tdy_ohlcv(client, asset)
     yesterday = get_ytd_ohlcv(client, asset)
@@ -99,18 +90,7 @@ def get_target_price(client: Spot, asset: str="BTCUSDT") -> float:
 
     return float(round(target, 4))
 
-# def get_precision(client: Spot, asset: str="BTCUSDT") -> int:
-#     """
-#     Returns the asset precision of an asset.
-#     """
-#     assert isinstance(client, Spot)
-#     assert isinstance(asset, str)
-
-#     if len(asset) <= 5: asset += "USDT"
-
-#     return int(client.exchange_info(asset)["symbols"][0]["baseAssetPrecision"])
-
-def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT") -> dict:
+def buy_crypto(client: Spot, balance: float, price: float, asset: str="ETHUSDT") -> dict:
     """
     Attemps to purchase crypto at target price.
     """
@@ -118,6 +98,9 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT")
     assert isinstance(balance, float)
     assert isinstance(price, float)
     assert isinstance(asset, str)
+
+    # Add "USDT" if user just inputs coin symbol
+    if len(asset) <= 5: asset += "USDT"
 
     # Calculate the quantity of crypto to buy
     quantity = round((balance / price), 3)
@@ -132,13 +115,16 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str="BTCUSDT")
     post_message(config.slack_token, "#trade-alert", msg)
     return response
 
-def sell_crypto(client: Spot, quantity: float, asset: str="BTCUSDT") -> dict:
+def sell_crypto(client: Spot, quantity: float, asset: str="ETHUSDT") -> dict:
     """
     Attempts to sell crypto at market price.
     """
     assert isinstance(client, Spot)
     assert isinstance(quantity, float)
     assert isinstance(asset, str)
+
+    # Add "USDT" if user just inputs coin symbol
+    if len(asset) <= 5: asset += "USDT"
 
     msg = "SELL " + asset + " " + str(quantity) + " unit(s)"
 
