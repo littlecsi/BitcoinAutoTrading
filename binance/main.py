@@ -6,7 +6,7 @@ from binance.spot import Spot
 import time
 import datetime
 
-asset = "ETHUSDT"
+asset = "ETH"
 balance = 0.0
 target_price = 0.0
 
