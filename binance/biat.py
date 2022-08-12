@@ -8,15 +8,12 @@ from binance.spot import Spot
 import datetime
 import requests
 
-def get_balance(client: Spot, asset: str="ETHUSDT") -> float:
+def get_balance(client: Spot, asset: str="USDT") -> float:
     """
     Returns the account balance for a specific asset type.
     """
     assert isinstance(client, Spot)
     assert isinstance(asset, str)
-
-    # Add "USDT" if user just inputs coin symbol
-    if len(asset) <= 5: asset += "USDT"
 
     balances = client.account()["balances"]
 
