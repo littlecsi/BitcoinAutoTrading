@@ -25,7 +25,7 @@ def get_balance(client: Spot, asset: str="USDT") -> float:
             else:
                 return float(free)
 
-def get_current_price(client: Spot, asset: str="ETHUSDT") -> float:
+def get_current_price(client: Spot, asset: str) -> float:
     """"
     Returns the current price of a specific asset.
     Asset type is "BTC" by default.
@@ -48,7 +48,7 @@ def get_today() -> datetime.datetime:
 
     return datetime.datetime.timestamp(today)
 
-def get_ytd_ohlcv(client: Spot, asset: str="ETHUSDT") -> list:
+def get_ytd_ohlcv(client: Spot, asset: str) -> list:
     """
     Returns open, high, low, close, volume data from yesterday.
     """
@@ -65,7 +65,7 @@ def get_ytd_ohlcv(client: Spot, asset: str="ETHUSDT") -> list:
 
     return result[-1][1:6]
 
-def get_target_price(client: Spot, asset: str="ETHUSDT") -> float:
+def get_target_price(client: Spot, asset: str) -> float:
     """
     Returns target price of today.
     """
@@ -87,7 +87,7 @@ def get_target_price(client: Spot, asset: str="ETHUSDT") -> float:
 
     return float(round(target, 4))
 
-def buy_crypto(client: Spot, balance: float, price: float, asset: str="ETHUSDT") -> dict:
+def buy_crypto(client: Spot, balance: float, price: float, asset: str) -> dict:
     """
     Attemps to purchase crypto at target price.
     """
@@ -107,12 +107,14 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str="ETHUSDT")
         response = client.new_order(asset, "BUY", "MARKET", quantity=quantity)
     except:
         response = {}
+        msg = "FAILED " + msg
+        post_message(config.slack_token, '#debug', msg)
         raise Exception("Order not successful.\nPlease try again.")
     
     post_message(config.slack_token, "#trade-alert", msg)
     return response
 
-def sell_crypto(client: Spot, quantity: float, asset: str="ETHUSDT") -> dict:
+def sell_crypto(client: Spot, quantity: float, asset: str) -> dict:
     """
     Attempts to sell crypto at market price.
     """
@@ -129,6 +131,8 @@ def sell_crypto(client: Spot, quantity: float, asset: str="ETHUSDT") -> dict:
         response = client.new_order(asset, "SELL", "MARKET", quantity=quantity)
     except:
         response = {}
+        msg = "FAILED " + msg
+        post_message(config.slack_token, '#debug', msg)
         raise Exception("Order not successful.\nPlease try again.")
 
     post_message(config.slack_token, "#trade-alert", msg)
