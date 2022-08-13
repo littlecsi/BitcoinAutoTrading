@@ -32,8 +32,12 @@ def main():
             # Update next day
             mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(1)
 
-            # Sell crypto
-            biat.sell_crypto(client, biat.get_balance(client, asset), asset)
+            balance = biat.get_balance(client, asset)
+            if balance != 0:
+                # Sell crypto
+                biat.sell_crypto(client, balance, asset)
+            else:
+                biat.post_message(config.slack_token, "#trade-alert", "NOTHING TO SELL")
 
         current_price = biat.get_current_price(client, asset)
 
