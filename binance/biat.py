@@ -100,7 +100,11 @@ def buy_crypto(client: Spot, balance: float, price: float, asset: str) -> dict:
     if len(asset) <= 5: asset += "USDT"
 
     # Calculate the quantity of crypto to buy
-    quantity = round((balance / price), 3)
+    if balance < price:
+        quantity = round((balance / price), 3)
+    else:
+        quantity = balance // price
+        
     msg = "BUY " + asset + " " + str(quantity) + " unit(s)"
 
     try:
