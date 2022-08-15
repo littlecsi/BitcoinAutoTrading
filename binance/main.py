@@ -46,6 +46,9 @@ def main():
             # Get the entire balance of USDT dollars
             balance = biat.get_balance(client, "USDT")
 
+            # if no balance, do nothing
+            if balance < 1: continue
+
             # Purchase the maximum amount of crypto user can order.
             biat.buy_crypto(client, balance, target_price, asset)
 
