@@ -23,6 +23,7 @@ def main():
 
     while True:
         now = datetime.datetime.utcnow()
+        current_price = biat.get_current_price(client, asset)
         
         # When the day ends
         if mid < now < mid + datetime.timedelta(seconds=10):
@@ -33,13 +34,12 @@ def main():
             mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(1)
 
             balance = biat.get_balance(client, asset)
-            if balance != 0:
+            if balance != 0 and current_price < target_price:
                 # Sell crypto
                 biat.sell_crypto(client, balance, asset)
             else:
                 biat.post_message(config.slack_token, "#trade-alert", "NOTHING TO SELL")
 
-        current_price = biat.get_current_price(client, asset)
 
         # If the current price reaches the target price
         if current_price >= target_price:
