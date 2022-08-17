@@ -42,17 +42,14 @@ def main():
 
 
         # If the current price reaches the target price
-        if current_price >= target_price:
+        if current_price >= target_price and balance > 1.0:
             # Get the entire balance of USDT dollars
             balance = biat.get_balance(client, "USDT")
-
-            # if no balance, do nothing
-            if balance < 1.0: continue
 
             # Purchase the maximum amount of crypto user can order.
             biat.buy_crypto(client, balance, target_price, asset)
 
-        time.sleep(2)
+        time.sleep(1)
 
 if __name__ == "__main__":
     main()
