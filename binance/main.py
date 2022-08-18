@@ -34,7 +34,7 @@ def main():
             mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(1)
 
             balance = biat.get_balance(client, asset)
-            if balance != 0 and current_price < target_price:
+            if (balance != 0) and (current_price < target_price):
                 # Sell crypto
                 biat.sell_crypto(client, balance, asset)
             else:
