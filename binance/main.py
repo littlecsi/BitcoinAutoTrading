@@ -42,7 +42,7 @@ def main():
 
 
         # If the current price reaches the target price
-        if current_price >= target_price and balance > 1.0:
+        if (current_price >= target_price) and (balance > current_price):
             # Get the entire balance of USDT dollars
             balance = biat.get_balance(client, "USDT")
 
