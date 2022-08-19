@@ -96,12 +96,13 @@ def get_target_price(client: Spot, asset: str) -> float:
 
     # Volatility Breakout Target calculation
     target = float(yesterday[3]) + (float(yesterday[1]) - float(yesterday[2])) * 0.5
+    target = round(target, 4)
 
     msg = "TARGET " + asset + " " + str(target)
 
     post_message(config.slack_token, "#target", msg)
 
-    return float(round(target, 4))
+    return float(target, 4)
 
 def buy_crypto(client: Spot, balance: float, price: float, asset: str) -> dict:
     """

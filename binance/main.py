@@ -40,7 +40,6 @@ def main():
             else:
                 biat.post_message(config.slack_token, "#trade-alert", "NOTHING TO SELL")
 
-
         # If the current price reaches the target price
         if (current_price >= target_price):
             # Get the entire balance of USDT dollars
