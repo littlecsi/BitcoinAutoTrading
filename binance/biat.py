@@ -15,7 +15,11 @@ def get_balance(client: Spot, asset: str="USDT") -> float:
     assert isinstance(client, Spot)
     assert isinstance(asset, str)
 
-    balances = client.account()["balances"]
+    try:
+        balances = client.account()["balances"]
+    except:
+        msg = "get_balance() - cannot get " + asset + " information."
+        post_message(config.slack_token, "#debug", msg)
 
     for i in range(len(balances)):
         if balances[i]["asset"] == asset:
@@ -34,9 +38,16 @@ def get_current_price(client: Spot, asset: str) -> float:
     assert isinstance(asset, str)
 
     # Add "USDT" if user just inputs coin symbol
-    if len(asset) <= 5: asset += "USDT"
+    if len(asset) <= 5: 
+        asset += "USDT"
 
-    return float(client.ticker_price(asset)["price"])
+    try:
+        data = client.ticker_price(asset)["price"]
+    except:
+        msg = "get_current_price() - cannot get " + asset + " "
+        post_message(config.slack_token, "#debug", msg)
+
+    return float(data)
 
 def get_today() -> datetime.datetime:
     """
@@ -56,12 +67,17 @@ def get_ytd_ohlcv(client: Spot, asset: str) -> list:
     assert isinstance(asset, str)
 
     # Add "USDT" if user just inputs coin symbol
-    if len(asset) <= 5: asset += "USDT"
+    if len(asset) <= 5: 
+        asset += "USDT"
 
     # Receives today's timestamp and convert to "ms"
     today = int(get_today()) * 1000
 
-    result = client.klines(asset, "1d", endTime=today)
+    try:
+        result = client.klines(asset, "1d", endTime=today)
+    except:
+        msg = "get_ytd_ohlcv() - cannot get " + asset + " information."
+        post_message(config.slack_token, "#debug", msg)
 
     return result[-1][1:6]
 
