@@ -102,7 +102,7 @@ def get_target_price(client: Spot, asset: str) -> float:
 
     post_message(config.slack_token, "#target", msg)
 
-    return float(target, 4)
+    return float(target)
 
 def buy_crypto(client: Spot, balance: float, price: float, asset: str) -> dict:
     """
