@@ -17,17 +17,17 @@ def get_balance(client: Spot, asset: str="USDT") -> float:
 
     try:
         balances = client.account()["balances"]
+
+        for i in range(len(balances)):
+            if balances[i]["asset"] == asset:
+                free = balances[i]["free"]
+                if free == None:
+                    return 0.0
+                else:
+                    return float(free)
     except:
         msg = "get_balance() - cannot get " + asset + " information."
         post_message(config.slack_token, "#debug", msg)
-
-    for i in range(len(balances)):
-        if balances[i]["asset"] == asset:
-            free = balances[i]["free"]
-            if free == None:
-                return 0.0
-            else:
-                return float(free)
 
 def get_current_price(client: Spot, asset: str) -> float:
     """"
