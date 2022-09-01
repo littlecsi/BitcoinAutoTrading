@@ -19,6 +19,7 @@ def main():
     now = datetime.datetime.utcnow()
     mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(1)
 
+    balance = biat.get_balance(client, "USDT")
     target_price = biat.get_target_price(client, asset)
 
     while True:
@@ -33,21 +34,23 @@ def main():
             # Update next day
             mid = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(1)
 
-            balance = biat.get_balance(client, asset)
-            if (balance != 0) and (current_price < target_price):
+            coin = biat.get_balance(client, asset)
+            if (coin > 0) and (current_price < target_price):
                 # Sell crypto
-                biat.sell_crypto(client, balance, asset)
+                biat.sell_crypto(client, coin, asset)
+
+                # Update balance
+                balance = biat.get_balance(client, "USDT")
             else:
                 biat.post_message(config.slack_token, "#trade-alert", "NOTHING TO SELL")
 
         # If the current price reaches the target price
-        if (current_price >= target_price):
-            # Get the entire balance of USDT dollars
+        if (current_price >= target_price) and (balance > current_price):
+            # Purchase the maximum amount of crypto user can order.
+            biat.buy_crypto(client, balance, target_price, asset)
+            
+            # Update balance
             balance = biat.get_balance(client, "USDT")
-
-            if (balance > current_price):
-                # Purchase the maximum amount of crypto user can order.
-                biat.buy_crypto(client, balance, target_price, asset)
 
         time.sleep(2)
 
